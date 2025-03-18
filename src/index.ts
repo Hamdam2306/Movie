@@ -1,0 +1,260 @@
+interface Movie {
+    title: string;
+    genre: string;
+    stock: number;
+    rate: number;
+  }
+  
+  // Filmlar ro'yxati
+  const movies: Movie[] = [
+    { title: 'Airplane',  genre: 'Comedy',   stock: 7, rate: 3.5 },
+    { title: 'Die Hard',  genre: 'Action',   stock: 5, rate: 2.5 },
+    { title: 'Get Out',   genre: 'Thriller', stock: 8, rate: 3.5 },
+    { title: 'Gone Girl', genre: 'Thriller', stock: 7, rate: 4.5 },
+    { title: 'Fury Road',   genre: 'Action',   stock: 10, rate: 3.0 },
+    { title: 'Home Alone ',   genre: 'Comedy',   stock: 4,  rate: 2.0 },
+    { title: 'John Wick',   genre: 'Action',   stock: 2,  rate: 3.5 },
+    { title: 'Se7en',   genre: 'Thriller', stock: 6,  rate: 4.0 },
+    { title: 'The Mask',   genre: 'Comedy',   stock: 9,  rate: 3.8 },
+  ];
+  
+  // Janr ro'yxati
+  const genres: string[] = ['All Genres', 'Action', 'Comedy', 'Thriller'];
+  
+  // === 2) Holatni saqlash (State) ===
+  
+  // Tanlangan janr
+  let selectedGenre: string = 'All Genres';
+  // Hozirgi sahifa
+  let currentPage: number = 1;
+  // Bir sahifadagi elementlar soni
+  const pageSize: number = 3;
+  
+  // === 3) DOM yaratish funksiyalari ===
+  
+  // 3.1) Janr ro'yxati (chap tomondagi ul/li)
+  function createGenreList(): HTMLElement {
+    const ul = document.createElement('ul');
+    ul.className = 'border rounded-lg overflow-hidden';
+  
+    genres.forEach((genre) => {
+      const li = document.createElement('li');
+      li.textContent = genre;
+      li.className =
+        'p-3 border-b last:border-b-0 cursor-pointer hover:bg-blue-100 ' +
+        (genre === selectedGenre ? 'bg-blue-500 text-white' : '');
+  
+      // Janrni bosganda
+      li.addEventListener('click', () => {
+        selectedGenre = genre;
+        currentPage = 1; // filter o'zgarganda sahifani 1 ga qaytarish
+        renderAll();
+      });
+  
+      ul.appendChild(li);
+    });
+  
+    return ul;
+  }
+  
+  // 3.2) Filmlarni jadval shaklida chizish
+  function createMovieTable(moviesData: Movie[]): HTMLTableElement {
+    const table = document.createElement('table');
+    table.className = 'w-full border-collapse border';
+  
+    // THEAD
+    const thead = document.createElement('thead');
+    thead.className = 'bg-gray-100';
+    const headerRow = document.createElement('tr');
+  
+    const headers = ['Title', 'Genre', 'Stock', 'Rate', 'Action'];
+    headers.forEach((header) => {
+      const th = document.createElement('th');
+      th.className = 'p-2 ';
+      th.textContent = header;
+      headerRow.appendChild(th);
+    });
+  
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+  
+    // TBODY
+    const tbody = document.createElement('tbody');
+  
+    moviesData.forEach((movie) => {
+      const tr = document.createElement('tr');
+  
+      // Title
+      const tdTitle = document.createElement('td');
+      tdTitle.className = 'p-2  text-blue-500 cursor-pointer ';
+      tdTitle.textContent = movie.title;
+      tr.appendChild(tdTitle);
+  
+      // Genre
+      const tdGenre = document.createElement('td');
+      tdGenre.className = 'p-2 ';
+      tdGenre.textContent = movie.genre;
+      tr.appendChild(tdGenre);
+  
+      // Stock
+      const tdStock = document.createElement('td');
+      tdStock.className = 'p-2 ';
+      tdStock.textContent = movie.stock.toString();
+      tr.appendChild(tdStock);
+  
+      // Rate
+      const tdRate = document.createElement('td');
+      tdRate.className = 'p-2 ';
+      tdRate.textContent = movie.rate.toString();
+      tr.appendChild(tdRate);
+  
+      // Delete button
+      const tdDelete = document.createElement('td');
+      tdDelete.className = 'p-2  text-center';
+      const delBtn = document.createElement('button');
+      delBtn.className = 'bg-red-500 text-white px-2 py-1 rounded';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', () => {
+        // Filmlarni ro'yxatdan ham o'chirib tashlash
+        const index = movies.findIndex((m) => m.title === movie.title);
+        if (index !== -1) {
+          movies.splice(index, 1);
+        }
+        // O'sha qatorni DOMdan o'chirish yoki qayta renderAll() chaqirish
+        renderAll();
+      });
+      tdDelete.appendChild(delBtn);
+      tr.appendChild(tdDelete);
+  
+      tbody.appendChild(tr);
+    });
+  
+    table.appendChild(tbody);
+  
+    return table;
+  }
+  
+  // 3.3) Pagination tugmalarini yaratish
+  function createPagination(totalMovies: number): HTMLElement {
+    const container = document.createElement('div');
+    container.className = 'mt-4';
+  
+    // Sahifalar sonini hisoblash
+    const totalPages = Math.ceil(totalMovies / pageSize);
+  
+    for (let page = 1; page <= totalPages; page++) {
+      const btn = document.createElement('button');
+      btn.textContent = page.toString();
+      btn.className =
+        'px-3 py-1 border mr-2 ' +
+        (page === currentPage ? 'bg-blue-500 text-white' : '');
+  
+      btn.addEventListener('click', () => {
+        currentPage = page;
+        renderAll();
+      });
+  
+      container.appendChild(btn);
+    }
+  
+    return container;
+  }
+  
+  // 3.4) Asosiy layout (chap tomonda genre, o'ng tomonda content)
+  function createLayout(): HTMLDivElement {
+    const mainContainer = document.createElement('div');
+    mainContainer.className = 'flex gap-4 p-6';
+  
+    // Chap tomonda janr ro'yxati
+    const leftSide = document.createElement('div');
+    leftSide.className = 'w-1/4';
+    // O'ng tomonda jadval va search
+    const rightSide = document.createElement('div');
+    rightSide.className = 'w-3/4';
+  
+    mainContainer.appendChild(leftSide);
+    mainContainer.appendChild(rightSide);
+  
+    return mainContainer;
+  }
+  
+  // === 4) Render jarayonlari ===
+  
+  // 4.1) Filtrlangan filmlar ro'yxati
+  function getFilteredMovies(): Movie[] {
+    if (selectedGenre === 'All Genres') {
+      return movies;
+    } else {
+      return movies.filter((m) => m.genre === selectedGenre);
+    }
+  }
+  
+  // 4.2) Sahifalangan filmlar ro'yxati
+  function getPaginatedMovies(moviesData: Movie[]): Movie[] {
+    // currentPage va pageSize asosida slice qilamiz
+    const startIndex = (currentPage - 1) * pageSize; // 0-based
+    const endIndex = startIndex + pageSize;
+    return moviesData.slice(startIndex, endIndex);
+  }
+  
+  // 4.3) Hammasini qayta chizish
+  function renderAll(): void {
+    // body ichini tozalaymiz
+    document.body.innerHTML = '';
+  
+    // Asosiy layout
+    const mainContainer = createLayout();
+    document.body.appendChild(mainContainer);
+  
+    // Chap tomondagi bo'sh divga genre listni qo'shish
+    const leftSide = mainContainer.children[0] as HTMLElement;
+    const genreList = createGenreList();
+    leftSide.appendChild(genreList);
+  
+    // O'ng tomondagi bo'sh div
+    const rightSide = mainContainer.children[1] as HTMLElement;
+  
+    // New Movie tugmasi
+    const newMovieBtn = document.createElement('button');
+    newMovieBtn.className = 'mb-4 px-4 py-2 bg-blue-500 text-white rounded';
+    newMovieBtn.textContent = 'New Movie';
+    // Hozircha faqat alert chiqaramiz
+    newMovieBtn.addEventListener('click', () => {
+      alert('New Movie modal / form ochish mumkin');
+    });
+    rightSide.appendChild(newMovieBtn);
+  
+    // Filtrlangan filmlar
+    const filtered = getFilteredMovies();
+  
+    // Info paragraph
+    const infoParagraph = document.createElement('p');
+    infoParagraph.textContent = `Showing ${filtered.length} movies in the database.`;
+    rightSide.appendChild(infoParagraph);
+  
+    // Qidiruv inputi (ixtiyoriy, agar kerak bo'lsa)
+    // Bu yerda faqat layout sifatida qo'shildi, lekin funksiyasini ham yozish mumkin
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.placeholder = 'Search... (Optional)';
+    searchInput.className = 'border p-2 w-full mb-4';
+    // Agar real qidiruv funksiyasi kerak bo'lsa, keyin yozamiz
+    rightSide.appendChild(searchInput);
+  
+    // Sahifalangan filmlar
+    const paginatedMovies = getPaginatedMovies(filtered);
+  
+    // Jadvalni yaratish
+    const table = createMovieTable(paginatedMovies);
+    rightSide.appendChild(table);
+  
+    // Pagination tugmalari
+    const pagination = createPagination(filtered.length);
+    rightSide.appendChild(pagination);
+  }
+  
+  // === 5) Sahifa yuklanganda ishga tushirish ===
+  document.addEventListener('DOMContentLoaded', () => {
+    renderAll();
+  });
+  
