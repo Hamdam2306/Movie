@@ -1,3 +1,5 @@
+import { addNewMovie } from "./newMovie";
+
 interface Movie {
   title: string;
   genre: string;
@@ -17,9 +19,7 @@ const movies: Movie[] = [
   { title: "The Mask", genre: "Comedy", stock: 9, rate: 3.8 },
 ];
 
-
 const genres: string[] = ["All Genres", "Action", "Comedy", "Thriller"];
-
 
 let selectedGenre: string = "All Genres";
 
@@ -40,7 +40,7 @@ function createGenreList(): HTMLElement {
 
     li.addEventListener("click", () => {
       selectedGenre = genre;
-      currentPage = 1; 
+      currentPage = 1;
       renderAll();
     });
 
@@ -101,7 +101,6 @@ function createMovieTable(moviesData: Movie[]): HTMLTableElement {
     delBtn.className = "bg-red-500 text-white px-2 py-1 rounded";
     delBtn.textContent = "Delete";
     delBtn.addEventListener("click", () => {
-      
       const index = movies.findIndex((m) => m.title === movie.title);
       if (index !== -1) {
         movies.splice(index, 1);
@@ -123,7 +122,6 @@ function createMovieTable(moviesData: Movie[]): HTMLTableElement {
 function createPagination(totalMovies: number): HTMLElement {
   const container = document.createElement("div");
   container.className = "mt-4";
-
 
   const totalPages = Math.ceil(totalMovies / pageSize);
 
@@ -161,7 +159,6 @@ function createLayout(): HTMLDivElement {
   return mainContainer;
 }
 
-
 function getFilteredMovies(): Movie[] {
   if (selectedGenre === "All Genres") {
     return movies;
@@ -169,7 +166,6 @@ function getFilteredMovies(): Movie[] {
     return movies.filter((m) => m.genre === selectedGenre);
   }
 }
-
 
 function getPaginatedMovies(moviesData: Movie[]): Movie[] {
   const startIndex = (currentPage - 1) * pageSize; // 0-based
@@ -194,7 +190,7 @@ function renderAll(): void {
   newMovieBtn.textContent = "New Movie";
 
   newMovieBtn.addEventListener("click", () => {
-    alert("New movie page");
+    addNewMovie();
   });
   rightSide.appendChild(newMovieBtn);
 
