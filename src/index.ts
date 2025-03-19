@@ -5,7 +5,6 @@ interface Movie {
   rate: number;
 }
 
-// Filmlar ro'yxati
 const movies: Movie[] = [
   { title: "Airplane", genre: "Comedy", stock: 7, rate: 3.5 },
   { title: "Die Hard", genre: "Action", stock: 5, rate: 2.5 },
@@ -18,21 +17,16 @@ const movies: Movie[] = [
   { title: "The Mask", genre: "Comedy", stock: 9, rate: 3.8 },
 ];
 
-// Janr ro'yxati
+
 const genres: string[] = ["All Genres", "Action", "Comedy", "Thriller"];
 
-// === 2) Holatni saqlash (State) ===
 
-// Tanlangan janr
 let selectedGenre: string = "All Genres";
-// Hozirgi sahifa
+
 let currentPage: number = 1;
-// Bir sahifadagi elementlar soni
+
 const pageSize: number = 3;
 
-// === 3) DOM yaratish funksiyalari ===
-
-// 3.1) Janr ro'yxati (chap tomondagi ul/li)
 function createGenreList(): HTMLElement {
   const ul = document.createElement("ul");
   ul.className = "border rounded-lg overflow-hidden";
@@ -44,10 +38,9 @@ function createGenreList(): HTMLElement {
       "p-3 border-b last:border-b-0 cursor-pointer hover:bg-blue-100 " +
       (genre === selectedGenre ? "bg-blue-500 text-white" : "");
 
-    // Janrni bosganda
     li.addEventListener("click", () => {
       selectedGenre = genre;
-      currentPage = 1; // filter o'zgarganda sahifani 1 ga qaytarish
+      currentPage = 1; 
       renderAll();
     });
 
@@ -57,7 +50,6 @@ function createGenreList(): HTMLElement {
   return ul;
 }
 
-// 3.2) Filmlarni jadval shaklida chizish
 function createMovieTable(moviesData: Movie[]): HTMLTableElement {
   const table = document.createElement("table");
   table.className = "w-full border-collapse border";
@@ -202,7 +194,7 @@ function renderAll(): void {
   newMovieBtn.textContent = "New Movie";
 
   newMovieBtn.addEventListener("click", () => {
-    alert("New Movie modal / form ochish mumkin");
+    alert("New movie page");
   });
   rightSide.appendChild(newMovieBtn);
 
