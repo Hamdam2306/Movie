@@ -1,3 +1,5 @@
+// import { addMovie, type Movie } from ".";
+
 export function addNewMovie() {
   const container = document.createElement("div");
   container.className = "p-6 max-w-md mx-auto bg-white rounded-lg shadow-md";
@@ -56,7 +58,16 @@ export function addNewMovie() {
   document.body.innerHTML = "";
   document.body.appendChild(container);
 
-  saveButton.addEventListener("submit", (e) => {
+  // let movie: Movie = {
+  //   title: titleInput.value,
+  //   genre: genreSelect.value,
+  //   stock: parseInt(stockInput.value),
+  //   rate: parseFloat(rateInput.value),
+  // };
+
+  saveButton.addEventListener("click", (e) => {
+    // addMovie(movie);
+
     e.preventDefault();
     console.log("title: ", titleInput.value);
     console.log("genre: ", genreSelect.value);

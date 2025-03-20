@@ -1,13 +1,13 @@
 import { addNewMovie } from "./newMovie";
 
-interface Movie {
+export type Movie = {
   title: string;
   genre: string;
   stock: number;
   rate: number;
-}
+};
 
-const movies: Movie[] = [
+let movies: Movie[] = [
   { title: "Airplane", genre: "Comedy", stock: 7, rate: 3.5 },
   { title: "Die Hard", genre: "Action", stock: 5, rate: 2.5 },
   { title: "Get Out", genre: "Thriller", stock: 8, rate: 3.5 },
@@ -18,6 +18,11 @@ const movies: Movie[] = [
   { title: "Se7en", genre: "Thriller", stock: 6, rate: 4.0 },
   { title: "The Mask", genre: "Comedy", stock: 9, rate: 3.8 },
 ];
+
+// export function addMovie(movie: Movie) {
+//   movies.push(movie);
+//   renderAll();
+// }
 
 const genres: string[] = ["All Genres", "Action", "Comedy", "Thriller"];
 
@@ -215,6 +220,4 @@ function renderAll(): void {
   rightSide.appendChild(pagination);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderAll();
-});
+document.addEventListener("load", () => renderAll());

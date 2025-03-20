@@ -44,7 +44,7 @@ function addNewMovie() {
   container.appendChild(form);
   document.body.innerHTML = "";
   document.body.appendChild(container);
-  saveButton.addEventListener("submit", (e) => {
+  saveButton.addEventListener("click", (e) => {
     e.preventDefault();
     console.log("title: ", titleInput.value);
     console.log("genre: ", genreSelect.value);
@@ -207,6 +207,4 @@ function renderAll() {
   const pagination = createPagination(filtered.length);
   rightSide.appendChild(pagination);
 }
-document.addEventListener("DOMContentLoaded", () => {
-  renderAll();
-});
+document.addEventListener("load", () => {renderAll(),console.log('wjejkewdlwlek');});
