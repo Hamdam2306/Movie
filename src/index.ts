@@ -1,23 +1,6 @@
+import { movies } from "./db";
 import { addNewMovie } from "./newMovie";
-
-interface Movie {
-  title: string;
-  genre: string;
-  stock: number;
-  rate: number;
-}
-
-const movies: Movie[] = [
-  { title: "Airplane", genre: "Comedy", stock: 7, rate: 3.5 },
-  { title: "Die Hard", genre: "Action", stock: 5, rate: 2.5 },
-  { title: "Get Out", genre: "Thriller", stock: 8, rate: 3.5 },
-  { title: "Gone Girl", genre: "Thriller", stock: 7, rate: 4.5 },
-  { title: "Fury Road", genre: "Action", stock: 10, rate: 3.0 },
-  { title: "Home Alone ", genre: "Comedy", stock: 4, rate: 2.0 },
-  { title: "John Wick", genre: "Action", stock: 2, rate: 3.5 },
-  { title: "Se7en", genre: "Thriller", stock: 6, rate: 4.0 },
-  { title: "The Mask", genre: "Comedy", stock: 9, rate: 3.8 },
-];
+import type { Movie } from "./types";
 
 const genres: string[] = ["All Genres", "Action", "Comedy", "Thriller"];
 
@@ -173,7 +156,7 @@ function getPaginatedMovies(moviesData: Movie[]): Movie[] {
   return moviesData.slice(startIndex, endIndex);
 }
 
-function renderAll(): void {
+export function renderAll(): void {
   document.body.innerHTML = "";
 
   const mainContainer = createLayout();
@@ -204,6 +187,7 @@ function renderAll(): void {
   searchInput.type = "text";
   searchInput.placeholder = "Search... (Optional)";
   searchInput.className = "border p-2 w-full mb-4";
+  searchInput.required = true
   rightSide.appendChild(searchInput);
 
   const paginatedMovies = getPaginatedMovies(filtered);

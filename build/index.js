@@ -1,3 +1,20 @@
+// src/db.ts
+var movies = [
+  { title: "Airplane", genre: "Comedy", stock: 7, rate: 3.5 },
+  { title: "Die Hard", genre: "Action", stock: 5, rate: 2.5 },
+  { title: "Get Out", genre: "Thriller", stock: 8, rate: 3.5 },
+  { title: "Gone Girl", genre: "Thriller", stock: 7, rate: 4.5 },
+  { title: "Fury Road", genre: "Action", stock: 10, rate: 3 },
+  { title: "Home Alone ", genre: "Comedy", stock: 4, rate: 2 },
+  { title: "John Wick", genre: "Action", stock: 2, rate: 3.5 },
+  { title: "Se7en", genre: "Thriller", stock: 6, rate: 4 },
+  { title: "The Mask", genre: "Comedy", stock: 9, rate: 3.8 }
+];
+function addMovie(movie) {
+  movies.push(movie);
+  renderAll();
+}
+
 // src/newMovie.ts
 function addNewMovie() {
   const container = document.createElement("div");
@@ -14,6 +31,7 @@ function addNewMovie() {
     const input = document.createElement("input");
     input.type = type;
     input.name = name;
+    input.required = true;
     input.className = "w-full p-2 border rounded mb-4";
     form.appendChild(label);
     form.appendChild(input);
@@ -26,7 +44,7 @@ function addNewMovie() {
   const genreSelect = document.createElement("select");
   genreSelect.name = "genre";
   genreSelect.className = "w-full p-2 border rounded mb-4";
-  ["", "Action", "Comedy", "Drama"].forEach((genre) => {
+  ["", "Action", "Comedy", "Thriller"].forEach((genre) => {
     const option = document.createElement("option");
     option.value = genre;
     option.innerText = genre || "Select Genre";
@@ -37,14 +55,20 @@ function addNewMovie() {
   const stockInput = createInput("Number in Stock", "number", "stock");
   const rateInput = createInput("Rate", "number", "rate");
   const saveButton = document.createElement("button");
-  saveButton.type = "submit";
   saveButton.className = "w-full bg-blue-500 text-white p-2 rounded mt-2";
   saveButton.innerText = "Save";
   form.appendChild(saveButton);
   container.appendChild(form);
   document.body.innerHTML = "";
   document.body.appendChild(container);
-  saveButton.addEventListener("submit", (e) => {
+  saveButton.addEventListener("click", (e) => {
+    let movie = {
+      title: titleInput.value,
+      genre: genreSelect.value,
+      stock: parseInt(stockInput.value),
+      rate: parseFloat(rateInput.value)
+    };
+    addMovie(movie);
     e.preventDefault();
     console.log("title: ", titleInput.value);
     console.log("genre: ", genreSelect.value);
@@ -54,17 +78,6 @@ function addNewMovie() {
 }
 
 // src/index.ts
-var movies = [
-  { title: "Airplane", genre: "Comedy", stock: 7, rate: 3.5 },
-  { title: "Die Hard", genre: "Action", stock: 5, rate: 2.5 },
-  { title: "Get Out", genre: "Thriller", stock: 8, rate: 3.5 },
-  { title: "Gone Girl", genre: "Thriller", stock: 7, rate: 4.5 },
-  { title: "Fury Road", genre: "Action", stock: 10, rate: 3 },
-  { title: "Home Alone ", genre: "Comedy", stock: 4, rate: 2 },
-  { title: "John Wick", genre: "Action", stock: 2, rate: 3.5 },
-  { title: "Se7en", genre: "Thriller", stock: 6, rate: 4 },
-  { title: "The Mask", genre: "Comedy", stock: 9, rate: 3.8 }
-];
 var genres = ["All Genres", "Action", "Comedy", "Thriller"];
 var selectedGenre = "All Genres";
 var currentPage = 1;
@@ -200,6 +213,7 @@ function renderAll() {
   searchInput.type = "text";
   searchInput.placeholder = "Search... (Optional)";
   searchInput.className = "border p-2 w-full mb-4";
+  searchInput.required = true;
   rightSide.appendChild(searchInput);
   const paginatedMovies = getPaginatedMovies(filtered);
   const table = createMovieTable(paginatedMovies);
@@ -210,3 +224,6 @@ function renderAll() {
 document.addEventListener("DOMContentLoaded", () => {
   renderAll();
 });
+export {
+  renderAll
+};
