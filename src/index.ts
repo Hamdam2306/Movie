@@ -168,6 +168,8 @@ export function renderAll(): void {
 
   const rightSide = mainContainer.children[1] as HTMLElement;
 
+
+  
   const newMovieBtn = document.createElement("button");
   newMovieBtn.className = "mb-4 px-4 py-2 bg-blue-500 text-white rounded";
   newMovieBtn.textContent = "New Movie";
@@ -201,4 +203,4 @@ export function renderAll(): void {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderAll();
-});
+}); 
