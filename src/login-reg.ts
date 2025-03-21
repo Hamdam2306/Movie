@@ -1,3 +1,5 @@
+import { renderAll } from ".";
+
 /////////////////////////// Navbar //////////////////////////////
 const navbar: HTMLElement = document.createElement("nav") as HTMLElement;
 navbar.className = "flex justify-left items-center w-full bg-gray-100 text-white p-4 shadow-md gap-4";
@@ -111,7 +113,7 @@ loginLink?.addEventListener("click", () => {
     showLogin();
 });
 
-function showLogin() {
+export function showLogin() {
     login.style.display = "block";
     register.style.display = "none";
 }
@@ -144,10 +146,9 @@ function checkLogin(): void {
     const passWord: string = password.value;
 
     if (userName === "admin" && passWord === "root123") {
-        console.log(true);
-        alert("Login successful!");
+        renderAll()
     } else {
-        console.log(false);
+        showRegister()
         alert("Invalid username or password.");
     }
 }
