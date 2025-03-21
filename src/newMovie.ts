@@ -20,7 +20,6 @@ export function addNewMovie() {
     const input = document.createElement("input");
     input.type = type;
     input.name = name;
-    input.required = true;
     input.className = "w-full p-2 border rounded mb-4";
 
     form.appendChild(label);

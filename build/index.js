@@ -31,7 +31,6 @@ function addNewMovie() {
     const input = document.createElement("input");
     input.type = type;
     input.name = name;
-    input.required = true;
     input.className = "w-full p-2 border rounded mb-4";
     form.appendChild(label);
     form.appendChild(input);
@@ -115,6 +114,7 @@ password.setAttribute("placeholder", "Enter your password");
 var loginBtn = document.createElement("button");
 loginBtn.className = "w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700";
 loginBtn.textContent = "Login";
+loginBtn.type = "submit";
 login.append(h1login, usernameLabel, username, passwordLabel, password, loginBtn);
 document.body.appendChild(login);
 var register = document.createElement("div");
@@ -153,7 +153,7 @@ document.body.appendChild(register);
 registerLink?.addEventListener("click", () => {
   showRegister();
 });
-loginLink?.addEventListener("click", () => {
+loginLink?.addEventListener("submit", () => {
   showLogin();
 });
 function showLogin() {
@@ -189,6 +189,67 @@ function checkLogin() {
   }
 }
 
+// src/ediitModal.ts
+var editContainer = document.createElement("div");
+var save = document.createElement("button");
+function editMovie(movie) {
+  document.body.innerHTML = "";
+  const title = document.createElement("input");
+  title.setAttribute("type", "text");
+  title.setAttribute("placeholder", "Title");
+  title.setAttribute("class", "border p-2 w-full mb-4");
+  title.setAttribute("required", "true");
+  title.value = movie.title;
+  const genre = document.createElement("select");
+  genre.setAttribute("class", "border p-2 w-full mb-4");
+  genre.setAttribute("required", "true");
+  const option1 = document.createElement("option");
+  option1.setAttribute("value", movie.genre);
+  option1.textContent = "Select Genre";
+  genre.appendChild(option1);
+  const option2 = document.createElement("option");
+  option2.setAttribute("value", "Action");
+  option2.textContent = "Action";
+  genre.appendChild(option2);
+  const option3 = document.createElement("option");
+  option3.setAttribute("value", "Comedy");
+  option3.textContent = "Comedy";
+  genre.appendChild(option3);
+  const option4 = document.createElement("option");
+  option4.setAttribute("value", "Thriller");
+  option4.textContent = "Thriller";
+  genre.appendChild(option4);
+  const stock = document.createElement("input");
+  stock.setAttribute("type", "number");
+  stock.setAttribute("placeholder", "Number in Stock");
+  stock.setAttribute("class", "border p-2 w-full mb-4");
+  stock.setAttribute("required", "true");
+  stock.value = movie.stock.toString();
+  const rate = document.createElement("input");
+  rate.setAttribute("type", "number");
+  rate.setAttribute("placeholder", "Rate");
+  rate.setAttribute("class", "border p-2 w-full mb-4");
+  rate.setAttribute("required", "true");
+  rate.value = movie.rate.toString();
+  save.textContent = "Save";
+  save.setAttribute("class", "w-full bg-blue-500 text-white p-2 rounded");
+  editContainer.setAttribute("class", "w-1/2 p-4 mx-auto");
+  editContainer.appendChild(title);
+  editContainer.appendChild(genre);
+  editContainer.appendChild(stock);
+  editContainer.appendChild(rate);
+  editContainer.appendChild(save);
+  document.body.appendChild(editContainer);
+  save.addEventListener("click", () => {
+    movie.title = title.value;
+    movie.genre = genre.value;
+    movie.stock = parseInt(stock.value);
+    movie.rate = parseFloat(rate.value);
+    editContainer.innerHTML = "";
+    renderAll();
+  });
+}
+
 // src/index.ts
 var genres = ["All Genres", "Action", "Comedy", "Thriller"];
 var selectedGenre = "All Genres";
@@ -216,7 +277,7 @@ function createMovieTable(moviesData) {
   const thead = document.createElement("thead");
   thead.className = "bg-gray-100";
   const headerRow = document.createElement("tr");
-  const headers = ["Title", "Genre", "Stock", "Rate", "Action"];
+  const headers = ["Title", "Genre", "Stock", "Rate", "Action", "Edit"];
   headers.forEach((header) => {
     const th = document.createElement("th");
     th.className = "p-2 ";
@@ -258,6 +319,16 @@ function createMovieTable(moviesData) {
     });
     tdDelete.appendChild(delBtn);
     tr.appendChild(tdDelete);
+    const tdEdit = document.createElement("td");
+    tdDelete.className = "p-2  text-center";
+    const edit = document.createElement("button");
+    edit.className = "bg-blue-500 text-white px-2 py-1 rounded";
+    edit.textContent = "Edit";
+    edit.addEventListener("click", () => {
+      editMovie(movie);
+    });
+    tdEdit.appendChild(edit);
+    tr.appendChild(tdEdit);
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
@@ -302,6 +373,18 @@ function getPaginatedMovies(moviesData) {
   const endIndex = startIndex + pageSize;
   return moviesData.slice(startIndex, endIndex);
 }
+var searchInput = document.createElement("input");
+searchInput.type = "text";
+searchInput.placeholder = "Search... (Optional)";
+searchInput.className = "border p-2 w-full mb-4";
+searchInput.required = true;
+var isSearch = false;
+searchInput.addEventListener("input", () => {
+  console.log("searchInput.value: ", searchInput.value);
+  isSearch = true;
+  const filtered = getFilteredMovies().filter((m) => m.title.toLowerCase().includes(searchInput.value.toLowerCase()));
+  renderAll();
+});
 function renderAll() {
   document.body.innerHTML = "";
   const mainContainer = createLayout();
@@ -331,11 +414,6 @@ function renderAll() {
   const infoParagraph = document.createElement("p");
   infoParagraph.textContent = `Showing ${filtered.length} movies in the database.`;
   rightSide.appendChild(infoParagraph);
-  const searchInput = document.createElement("input");
-  searchInput.type = "text";
-  searchInput.placeholder = "Search... (Optional)";
-  searchInput.className = "border p-2 w-full mb-4";
-  searchInput.required = true;
   rightSide.appendChild(searchInput);
   const paginatedMovies = getPaginatedMovies(filtered);
   const table = createMovieTable(paginatedMovies);

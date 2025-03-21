@@ -3,6 +3,7 @@ import { addNewMovie } from "./newMovie";
 import type { Movie } from "./types";
 import "./login-reg";
 import { showLogin } from "./login-reg";
+import { editMovie } from "./ediitModal";
 
 const genres: string[] = ["All Genres", "Action", "Comedy", "Thriller"];
 
@@ -44,7 +45,7 @@ function createMovieTable(moviesData: Movie[]): HTMLTableElement {
   thead.className = "bg-gray-100";
   const headerRow = document.createElement("tr");
 
-  const headers = ["Title", "Genre", "Stock", "Rate", "Action"];
+  const headers = ["Title", "Genre", "Stock", "Rate", "Action", "Edit"];
   headers.forEach((header) => {
     const th = document.createElement("th");
     th.className = "p-2 ";
@@ -93,8 +94,22 @@ function createMovieTable(moviesData: Movie[]): HTMLTableElement {
 
       renderAll();
     });
+
     tdDelete.appendChild(delBtn);
     tr.appendChild(tdDelete);
+
+    const tdEdit = document.createElement("td");
+    tdDelete.className = "p-2  text-center";
+    const edit = document.createElement("button");
+    edit.className = "bg-blue-500 text-white px-2 py-1 rounded";
+    edit.textContent = "Edit";
+    edit.addEventListener("click", () => {
+      editMovie(movie);
+
+      // renderAll();
+    });
+    tdEdit.appendChild(edit);
+    tr.appendChild(tdEdit);
 
     tbody.appendChild(tr);
   });
@@ -158,8 +173,30 @@ function getPaginatedMovies(moviesData: Movie[]): Movie[] {
   return moviesData.slice(startIndex, endIndex);
 }
 
+const searchInput = document.createElement("input");
+searchInput.type = "text";
+searchInput.placeholder = "Search... (Optional)";
+searchInput.className = "border p-2 w-full mb-4";
+searchInput.required = true;
+let isSearch = false;
+
+searchInput.addEventListener("input", () => {
+  console.log("searchInput.value: ", searchInput.value);
+  isSearch = true;
+
+  const filtered = getFilteredMovies().filter((m) =>
+    m.title.toLowerCase().includes(searchInput.value.toLowerCase())
+  );
+
+  renderAll();
+
+  // renderAll();
+});
+
 export function renderAll(): void {
+
   document.body.innerHTML = "";
+  // isSearch ? searchInput.focus : null;
 
   const mainContainer = createLayout();
   document.body.appendChild(mainContainer);
@@ -185,7 +222,7 @@ export function renderAll(): void {
   btnWrapper.appendChild(logOutBtn);
 
   logOutBtn.addEventListener("click", () => {
-    window.location.reload()
+    window.location.reload();
   });
 
   newMovieBtn.addEventListener("click", () => {
@@ -199,11 +236,6 @@ export function renderAll(): void {
   infoParagraph.textContent = `Showing ${filtered.length} movies in the database.`;
   rightSide.appendChild(infoParagraph);
 
-  const searchInput = document.createElement("input");
-  searchInput.type = "text";
-  searchInput.placeholder = "Search... (Optional)";
-  searchInput.className = "border p-2 w-full mb-4";
-  searchInput.required = true;
   rightSide.appendChild(searchInput);
 
   const paginatedMovies = getPaginatedMovies(filtered);
