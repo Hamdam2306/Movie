@@ -207,4 +207,4 @@ function renderAll() {
   const pagination = createPagination(filtered.length);
   rightSide.appendChild(pagination);
 }
-document.addEventListener("load", () => {renderAll(),console.log('wjejkewdlwlek');});
+document.addEventListener("load", () => renderAll());
