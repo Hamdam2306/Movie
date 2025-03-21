@@ -1,6 +1,8 @@
 import { movies } from "./db";
 import { addNewMovie } from "./newMovie";
 import type { Movie } from "./types";
+import "./login-reg";
+import { showLogin } from "./login-reg";
 
 const genres: string[] = ["All Genres", "Action", "Comedy", "Thriller"];
 
@@ -168,14 +170,28 @@ export function renderAll(): void {
 
   const rightSide = mainContainer.children[1] as HTMLElement;
 
+  const btnWrapper = document.createElement("div");
+  btnWrapper.classList.add("flex", "justify-between", "items-center", "mb-4");
+
   const newMovieBtn = document.createElement("button");
   newMovieBtn.className = "mb-4 px-4 py-2 bg-blue-500 text-white rounded";
   newMovieBtn.textContent = "New Movie";
 
+  const logOutBtn = document.createElement("button");
+  logOutBtn.className = "mb-4 px-4 py-2 bg-blue-500 text-white rounded";
+  logOutBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket"></i>`;
+
+  btnWrapper.appendChild(newMovieBtn);
+  btnWrapper.appendChild(logOutBtn);
+
+  logOutBtn.addEventListener("click", () => {
+    window.location.reload()
+  });
+
   newMovieBtn.addEventListener("click", () => {
     addNewMovie();
   });
-  rightSide.appendChild(newMovieBtn);
+  rightSide.appendChild(btnWrapper);
 
   const filtered = getFilteredMovies();
 
@@ -187,7 +203,7 @@ export function renderAll(): void {
   searchInput.type = "text";
   searchInput.placeholder = "Search... (Optional)";
   searchInput.className = "border p-2 w-full mb-4";
-  searchInput.required = true
+  searchInput.required = true;
   rightSide.appendChild(searchInput);
 
   const paginatedMovies = getPaginatedMovies(filtered);
@@ -199,6 +215,4 @@ export function renderAll(): void {
   rightSide.appendChild(pagination);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderAll();
-});
+document.addEventListener("DOMContentLoaded", () => {});

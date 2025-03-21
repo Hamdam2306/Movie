@@ -77,6 +77,118 @@ function addNewMovie() {
   });
 }
 
+// src/login-reg.ts
+var navbar = document.createElement("nav");
+navbar.className = "flex justify-left items-center w-full bg-gray-100 text-white p-4 shadow-md gap-4";
+var h1nav = document.createElement("h1");
+h1nav.className = "text-black text-2xl font-bold";
+h1nav.textContent = "Vidly";
+var loginLink = document.createElement("a");
+loginLink.className = "text-blue-500 font-semibold hover:underline";
+loginLink.textContent = "Login";
+loginLink.setAttribute("href", "#");
+var registerLink = document.createElement("a");
+registerLink.className = "text-blue-500 font-semibold hover:underline";
+registerLink.textContent = "Register";
+registerLink.setAttribute("href", "#");
+navbar.append(h1nav, loginLink, registerLink);
+document.body.appendChild(navbar);
+var login = document.createElement("div");
+login.className = "flex flex-col justify-center relative left-[500px] mt-10 p-6 bg-white shadow-md rounded w-96";
+var h1login = document.createElement("h1");
+h1login.className = "text-2xl font-semibold text-gray-800 mb-4";
+h1login.textContent = "Login Page";
+var usernameLabel = document.createElement("label");
+usernameLabel.className = "block text-gray-700";
+usernameLabel.textContent = "Username";
+var username = document.createElement("input");
+username.className = "w-full p-2 mb-3 border border-gray-400 rounded";
+username.setAttribute("type", "text");
+username.setAttribute("placeholder", "Enter your username");
+var passwordLabel = document.createElement("label");
+passwordLabel.className = "block text-gray-700";
+passwordLabel.textContent = "Password";
+var password = document.createElement("input");
+password.className = "w-full p-2 mb-3 border border-gray-400 rounded";
+password.setAttribute("type", "password");
+password.setAttribute("placeholder", "Enter your password");
+var loginBtn = document.createElement("button");
+loginBtn.className = "w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700";
+loginBtn.textContent = "Login";
+login.append(h1login, usernameLabel, username, passwordLabel, password, loginBtn);
+document.body.appendChild(login);
+var register = document.createElement("div");
+register.className = "flex flex-col justify-center relative left-[500px] mt-10 p-6 bg-white shadow-md rounded w-96";
+register.style.display = "none";
+var h1register = document.createElement("h1");
+h1register.className = "text-2xl font-semibold text-gray-800 mb-4";
+h1register.textContent = "Register Page";
+var usernamelabel = document.createElement("label");
+usernamelabel.className = "block text-gray-700";
+usernamelabel.textContent = "Username";
+var registerUsername = document.createElement("input");
+registerUsername.className = "w-full p-2 mb-3 border border-gray-400 rounded";
+registerUsername.setAttribute("type", "text");
+registerUsername.setAttribute("placeholder", "Enter your username");
+var passwordlabel = document.createElement("label");
+passwordlabel.className = "block text-gray-700";
+passwordlabel.textContent = "Password";
+var registerPassword = document.createElement("input");
+registerPassword.className = "w-full p-2 mb-3 border border-gray-400 rounded";
+registerPassword.setAttribute("type", "password");
+registerPassword.setAttribute("placeholder", "Enter your password");
+var registerBtn = document.createElement("button");
+registerBtn.className = "w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700";
+registerBtn.textContent = "Register";
+var nameLabel = document.createElement("label");
+nameLabel.className = "block text-gray-700";
+nameLabel.textContent = "Name";
+var nameInput = document.createElement("input");
+nameInput.className = "w-full p-2 mb-3 border border-gray-400 rounded";
+nameInput.setAttribute("type", "text");
+nameInput.setAttribute("placeholder", "Enter your name");
+register.append(h1register, usernamelabel, registerUsername, passwordlabel, registerPassword, nameLabel, nameInput, registerBtn);
+document.body.appendChild(login);
+document.body.appendChild(register);
+registerLink?.addEventListener("click", () => {
+  showRegister();
+});
+loginLink?.addEventListener("click", () => {
+  showLogin();
+});
+function showLogin() {
+  login.style.display = "block";
+  register.style.display = "none";
+}
+function showRegister() {
+  login.style.display = "none";
+  register.style.display = "block";
+}
+document.addEventListener("DOMContentLoaded", () => {
+  login?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    checkLogin();
+  });
+  loginBtn?.addEventListener("click", () => {
+    checkLogin();
+  });
+  registerBtn?.addEventListener("click", () => {
+    console.log("Username =", registerUsername.value);
+    console.log("Password =", registerPassword.value);
+    console.log("Name =", nameInput.value);
+  });
+});
+function checkLogin() {
+  const userName = username.value;
+  const passWord = password.value;
+  if (userName === "admin" && passWord === "root123") {
+    renderAll();
+  } else {
+    showRegister();
+    alert("Invalid username or password.");
+  }
+}
+
 // src/index.ts
 var genres = ["All Genres", "Action", "Comedy", "Thriller"];
 var selectedGenre = "All Genres";
@@ -198,13 +310,23 @@ function renderAll() {
   const genreList = createGenreList();
   leftSide.appendChild(genreList);
   const rightSide = mainContainer.children[1];
+  const btnWrapper = document.createElement("div");
+  btnWrapper.classList.add("flex", "justify-between", "items-center", "mb-4");
   const newMovieBtn = document.createElement("button");
   newMovieBtn.className = "mb-4 px-4 py-2 bg-blue-500 text-white rounded";
   newMovieBtn.textContent = "New Movie";
+  const logOutBtn = document.createElement("button");
+  logOutBtn.className = "mb-4 px-4 py-2 bg-blue-500 text-white rounded";
+  logOutBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket"></i>`;
+  btnWrapper.appendChild(newMovieBtn);
+  btnWrapper.appendChild(logOutBtn);
+  logOutBtn.addEventListener("click", () => {
+    window.location.reload();
+  });
   newMovieBtn.addEventListener("click", () => {
     addNewMovie();
   });
-  rightSide.appendChild(newMovieBtn);
+  rightSide.appendChild(btnWrapper);
   const filtered = getFilteredMovies();
   const infoParagraph = document.createElement("p");
   infoParagraph.textContent = `Showing ${filtered.length} movies in the database.`;
@@ -222,7 +344,6 @@ function renderAll() {
   rightSide.appendChild(pagination);
 }
 document.addEventListener("DOMContentLoaded", () => {
-  renderAll();
 });
 export {
   renderAll
